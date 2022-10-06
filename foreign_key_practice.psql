@@ -1,0 +1,38 @@
+-- from the terminal run:
+-- psql < outer_space.sql
+
+DROP DATABASE IF EXISTS foreign_key_practice;
+
+CREATE DATABASE foreign_key_practice;
+
+\c foreign_key_practice
+
+
+
+
+CREATE TABLE customers (
+    id SERIAL PRIMARY KEY,
+    cust_name TEXT
+);
+
+INSERT INTO customers
+    (cust_name) VALUES ('cust1'), ('cust2'), ('cust3'), ('cust4');
+
+CREATE TABLE orders (
+    order_id SERIAL,
+    dish_name TEXT,
+    customer_id INTEGER REFERENCES customers (id)
+);
+
+INSERT INTO orders 
+    (dish_name, customer_id)
+    VALUES
+    ('Food1', (SELECT id FROM customers WHERE cust_name = 'cust1')),
+    ('Food2', (SELECT id FROM customers WHERE cust_name = 'cust2')),
+    ('Food3', (SELECT id FROM customers WHERE cust_name = 'cust3')),
+    ('Food4', (SELECT id FROM customers WHERE cust_name = 'cust4'));
+
+
+
+-- INSERT INTO numbers
+-- (num) VALUES (1.111),(2.222),(3.333);

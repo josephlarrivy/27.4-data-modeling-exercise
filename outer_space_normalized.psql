@@ -1,0 +1,37 @@
+-- from the terminal run:
+-- psql < outer_space.sql
+
+DROP DATABASE IF EXISTS outer_space_normalized;
+
+CREATE DATABASE outer_space_normalized;
+
+\c outer_space_normalized
+
+CREATE TABLE galaxies
+(
+    id SERIAL PRIMARY KEY,
+    gal_name TEXT NOT NULL
+);
+
+INSERT INTO galaxies
+(gal_name) VALUES ('Milky WAY');
+
+CREATE TABLE planets
+(
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  orbital_period_in_years FLOAT NOT NULL,
+  orbits_around TEXT NOT NULL,
+  galaxy REFERENCES galaxies(id),
+  moons TEXT[]
+);
+
+INSERT INTO planets
+  (name, orbital_period_in_years, orbits_around, galaxy, moons)
+VALUES
+  ('Earth', 1.00, 'The Sun', (SELECT gal_name FROM galaxies WHERE id=1), '{"The Moon"}'),
+  ('Mars', 1.88, 'The Sun', (SELECT gal_name FROM galaxies WHERE id=1), '{"Phobos", "Deimos"}'),
+  ('Venus', 0.62, 'The Sun', (SELECT gal_name FROM galaxies WHERE id=1), '{}'),
+  ('Neptune', 164.8, 'The Sun', (SELECT gal_name FROM galaxies WHERE id=1), '{"Naiad", "Thalassa", "Despina", "Galatea", "Larissa", "S/2004 N 1", "Proteus", "Triton", "Nereid", "Halimede", "Sao", "Laomedeia", "Psamathe", "Neso"}'),
+  ('Proxima Centauri b', 0.03, 'Proxima Centauri', (SELECT gal_name FROM galaxies WHERE id=1), '{}'),
+  ('Gliese 876 b', 0.23, 'Gliese 876', (SELECT gal_name FROM galaxies WHERE id=1), '{}');
